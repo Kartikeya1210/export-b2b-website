@@ -1,0 +1,89 @@
+<div class="product-page page-width">
+  <div class="product-page__media">
+    {% if product.featured_image %}
+      <img
+        class="product-page__image"
+        src="{{ product.featured_image | image_url: width: 800 }}"
+        alt="{{ product.featured_image.alt | default: product.title | escape }}"
+        width="800"
+        height="800"
+      >
+    {% else %}
+      <div class="product-page__image product-page__image--placeholder">No image</div>
+    {% endif %}
+  </div>
+  <div class="product-page__info">
+    <h1 class="product-page__title h1">{{ product.title }}</h1>
+    {% if wholesale_customer %}
+      <p class="product-page__price">{{ product.selected_or_first_available_variant.price | money }}{% if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %} <span class="product-page__compare-price">{{ product.selected_or_first_available_variant.compare_at_price | money }}</span>{% endif %}</p>
+    {% else %}
+      <p class="product-page__price product-page__price--hidden">{{ 'customer.sign_in_to_view_prices' | t }}</p>
+    {% endif %}
+    {% if product.description != blank %}
+      <div class="product-page__description">{{ product.description }}</div>
+    {% endif %}
+
+    {% if wholesale_customer %}
+    {% form 'product', product, class: 'product-form' %}
+      {% if product.variants.size > 1 %}
+        <div class="product-form__variants">
+          <label class="product-form__variants-label">{{ 'products.product.variant' | t }}</label>
+          <select name="id" class="product-form__variant-select" data-product-variants>
+            {% for variant in product.variants %}
+              <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
+                {{ variant.title }}{% unless variant.available %} – {{ 'products.product.sold_out' | t }}{% endunless %} – {{ variant.price | money }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+      {% else %}
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+      {% endif %}
+
+      <div class="quantity-selector">
+        <label for="Quantity-{{ section.id }}">{{ 'products.product.quantity' | t }}</label>
+        <input
+          type="number"
+          id="Quantity-{{ section.id }}"
+          name="quantity"
+          value="1"
+          min="1"
+          max="999"
+          aria-label="{{ 'products.product.quantity' | t }}"
+        >
+      </div>
+      <button type="submit" name="add" class="btn btn--primary" {% unless product.available %}disabled{% endunless %}>
+        {% if product.available %}
+          {{ 'products.product.add_to_cart' | t }}
+        {% else %}
+          {{ 'products.product.sold_out' | t }}
+        {% endif %}
+      </button>
+    {% endform %}
+    {% else %}
+      <div class="product-page__gate">
+        <p class="product-page__gate-text">{{ 'customer.wholesale_only_message' | t }}</p>
+        <a href="{{ routes.account_login_url }}" class="btn btn--primary">{{ 'customer.log_in' | t }}</a>
+        {% if section.settings.request_account_page != blank %}
+          <a href="{{ section.settings.request_account_page }}" class="btn btn--secondary">{{ 'customer.request_account' | t }}</a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product",
+  "tag": "section",
+  "class": "section-product-main",
+  "settings": [
+    {
+      "type": "url",
+      "id": "request_account_page",
+      "label": "Request account page",
+      "info": "Shown when visitor is not approved. Match the page set in Header."
+    }
+  ]
+}
+{% endschema %}

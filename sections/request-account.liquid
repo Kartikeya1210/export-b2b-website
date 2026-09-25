@@ -1,0 +1,102 @@
+<div class="request-account page-width">
+  <header class="request-account__header">
+    <h1 class="request-account__title h1">{{ section.settings.heading }}</h1>
+    <p class="request-account__subtitle">{{ section.settings.subtitle }}</p>
+  </header>
+
+  {% if customer %}
+    {% if wholesale_customer %}
+      <p class="request-account__logged-in">{{ 'customer.already_approved' | t }}</p>
+      <a href="{{ routes.collections_url }}" class="btn btn--primary">{{ 'general.catalog' | t }}</a>
+    {% else %}
+      <p class="request-account__pending">{{ 'customer.pending_approval' | t }}</p>
+    {% endif %}
+  {% else %}
+    {% form 'contact', class: 'request-account__form' %}
+      {% if form.posted_successfully? %}
+        <p class="request-account__success">{{ section.settings.success_message }}</p>
+      {% else %}
+        {% if form.errors %}
+          <div class="request-account__errors" role="alert">
+            {{ form.errors | default_errors }}
+          </div>
+        {% endif %}
+
+        <div class="request-account__fields">
+          <div class="request-account__row">
+            <label for="RequestFirstName">{{ 'customer.first_name' | t }}</label>
+            <input type="text" id="RequestFirstName" name="contact[first_name]" value="{{ form.first_name }}" required autocomplete="given-name">
+          </div>
+          <div class="request-account__row">
+            <label for="RequestLastName">{{ 'customer.last_name' | t }}</label>
+            <input type="text" id="RequestLastName" name="contact[last_name]" value="{{ form.last_name }}" required autocomplete="family-name">
+          </div>
+          <div class="request-account__row">
+            <label for="RequestEmail">{{ 'customer.email' | t }}</label>
+            <input type="email" id="RequestEmail" name="contact[email]" value="{{ form.email }}" required autocomplete="email">
+          </div>
+          <div class="request-account__row">
+            <label for="RequestCompany">{{ 'customer.company' | t }}</label>
+            <input type="text" id="RequestCompany" name="contact[company]" value="{{ form.company }}" autocomplete="organization" placeholder="{{ section.settings.company_placeholder }}">
+          </div>
+          <div class="request-account__row request-account__row--full">
+            <label for="RequestMessage">{{ 'customer.message' | t }}</label>
+            <textarea id="RequestMessage" name="contact[body]" rows="4" placeholder="{{ section.settings.message_placeholder }}">{{ form.body }}</textarea>
+          </div>
+        </div>
+
+        <input type="hidden" name="contact[tags]" value="wholesale-request">
+
+        <button type="submit" class="btn btn--primary btn--large">
+          {{ section.settings.submit_label }}
+        </button>
+      {% endif %}
+    {% endform %}
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Request an account",
+  "tag": "section",
+  "class": "section-request-account",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Request a wholesale account"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subheading",
+      "default": "Submit your details and we’ll review your request. Approved B2B customers can log in to see pricing and place orders."
+    },
+    {
+      "type": "text",
+      "id": "company_placeholder",
+      "label": "Company field placeholder",
+      "default": "Your business name"
+    },
+    {
+      "type": "text",
+      "id": "message_placeholder",
+      "label": "Message field placeholder",
+      "default": "Tell us about your business and how you’d like to work with us."
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Submit button text",
+      "default": "Submit request"
+    },
+    {
+      "type": "textarea",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thanks for your request. We’ll review it and get back to you soon."
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,24 @@
+<a href="{{ product.url }}" class="product-card product-card__link">
+  <div class="product-card__media">
+    {% if product.featured_image %}
+      <img
+        class="product-card__image"
+        src="{{ product.featured_image | image_url: width: 520 }}"
+        alt="{{ product.featured_image.alt | default: product.title | escape }}"
+        width="260"
+        height="260"
+        loading="lazy"
+      >
+    {% else %}
+      <div class="product-card__image product-card__image--placeholder">No image</div>
+    {% endif %}
+  </div>
+  <div class="product-card__info">
+    <h3 class="product-card__title">{{ product.title }}</h3>
+    {% if wholesale_customer %}
+      <span class="product-card__price">{{ product.price | money }}</span>
+    {% else %}
+      <span class="product-card__price product-card__price--hidden">{{ 'customer.sign_in_to_view_prices' | t }}</span>
+    {% endif %}
+  </div>
+</a>

@@ -1,0 +1,51 @@
+{
+  "general": {
+    "home": "Home",
+    "catalog": "Catalog",
+    "cart": "Cart",
+    "view_all": "View all",
+    "no_products": "No products in this collection.",
+    "no_collections": "No collections yet.",
+    "products_count": "products",
+    "all_rights": "All rights reserved.",
+    "continue_shopping": "Continue shopping"
+  },
+  "customer": {
+    "account": "Account",
+    "log_in": "Log in",
+    "log_out": "Log out",
+    "request_account": "Request an account",
+    "sign_in_to_view_prices": "Sign in to view prices",
+    "wholesale_only_message": "Pricing and ordering are for approved wholesale accounts. Log in or request an account.",
+    "sign_in_to_place_orders": "Sign in with an approved account to place orders.",
+    "already_approved": "You’re approved. Browse the catalog and place orders.",
+    "pending_approval": "Your account is pending approval. We’ll notify you when you can place orders.",
+    "first_name": "First name",
+    "last_name": "Last name",
+    "email": "Email",
+    "company": "Company",
+    "message": "Message"
+  },
+  "products": {
+    "product": {
+      "quantity": "Quantity",
+      "variant": "Variant",
+      "add_to_cart": "Add to cart",
+      "sold_out": "Sold out"
+    }
+  },
+  "cart": {
+    "general": {
+      "product": "Product",
+      "price": "Price",
+      "quantity": "Quantity",
+      "total": "Total",
+      "subtotal": "Subtotal",
+      "update": "Update cart",
+      "checkout": "Proceed to checkout",
+      "remove": "Remove",
+      "empty": "Your cart is empty.",
+      "intro": "Review your order and proceed to secure checkout."
+    }
+  }
+}

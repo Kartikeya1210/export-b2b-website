@@ -1,0 +1,21 @@
+<footer class="footer" role="contentinfo">
+  <div class="footer__inner page-width">
+    <p class="footer__tagline">{{ section.settings.tagline }}</p>
+    <p class="footer__copy">&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ 'general.all_rights' | t }}</p>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "class": "section-footer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Wholesale & bulk orders"
+    }
+  ]
+}
+{% endschema %}

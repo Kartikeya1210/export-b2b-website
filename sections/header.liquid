@@ -1,0 +1,86 @@
+{% comment %} Set wholesale_customer for the whole theme: approved B2B sees prices and can order. {% endcomment %}
+{% assign wholesale_customer = false %}
+{% if section.settings.wholesale_only == false %}
+  {% assign wholesale_customer = true %}
+{% elsif customer %}
+  {% for tag in customer.tags %}
+    {% if tag == section.settings.wholesale_tag %}
+      {% assign wholesale_customer = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+<header class="header" role="banner">
+  <div class="header__inner page-width">
+    <a href="{{ routes.root_url }}" class="header__logo">
+      {% if section.settings.logo != blank %}
+        <img src="{{ section.settings.logo | image_url: width: 200 }}" alt="{{ shop.name }}" width="200" height="{{ 200 | divided_by: section.settings.logo.aspect_ratio | round }}">
+      {% else %}
+        <span class="header__logo-text">{{ section.settings.logo_text | default: shop.name }}</span>
+      {% endif %}
+    </a>
+    <nav class="header__nav" aria-label="Primary">
+      <ul class="header__menu">
+        <li><a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a></li>
+        <li><a href="{{ routes.collections_url }}">{{ 'general.catalog' | t }}</a></li>
+        {% if wholesale_customer %}
+          <li><a href="{{ routes.cart_url }}" class="header__cart-link">{{ 'general.cart' | t }} ({{ cart.item_count }})</a></li>
+        {% endif %}
+        {% if customer %}
+          <li><a href="{{ routes.account_url }}">{{ 'customer.account' | t }}</a></li>
+          <li><a href="{{ routes.account_logout_url }}">{{ 'customer.log_out' | t }}</a></li>
+        {% else %}
+          <li><a href="{{ routes.account_login_url }}">{{ 'customer.log_in' | t }}</a></li>
+          {% if section.settings.request_account_page != blank %}
+            <li><a href="{{ section.settings.request_account_page }}" class="header__cta">{{ 'customer.request_account' | t }}</a></li>
+          {% endif %}
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "section-header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo text (if no image)",
+      "default": "Wholesale"
+    },
+    {
+      "type": "header",
+      "content": "Wholesale-only access"
+    },
+    {
+      "type": "checkbox",
+      "id": "wholesale_only",
+      "label": "Wholesale-only store",
+      "info": "Hide prices and Add to cart until customer is logged in with the wholesale tag below.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "wholesale_tag",
+      "label": "Wholesale customer tag",
+      "info": "Add this tag in Admin → Customers to approve B2B accounts.",
+      "default": "wholesale"
+    },
+    {
+      "type": "url",
+      "id": "request_account_page",
+      "label": "Request account page",
+      "info": "Page with the Request an account form (create a page and assign template 'Request account')."
+    }
+  ]
+}
+{% endschema %}

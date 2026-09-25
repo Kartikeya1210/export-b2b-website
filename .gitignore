@@ -1,0 +1,9 @@
+node_modules/
+.next/
+out/
+.env*
+!.env.example
+# order log written at runtime
+data/orders.jsonl
+*.zip
+npm-debug.log*

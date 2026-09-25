@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "request-account",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}

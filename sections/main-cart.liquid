@@ -1,0 +1,77 @@
+<div class="cart-page page-width">
+  <h1 class="cart-page__title h1">{{ 'general.cart' | t }}</h1>
+
+  {% unless wholesale_customer %}
+    <div class="cart-page__gate">
+      <p class="cart-page__gate-text">{{ 'customer.sign_in_to_place_orders' | t }}</p>
+      <a href="{{ routes.account_login_url }}" class="btn btn--primary">{{ 'customer.log_in' | t }}</a>
+    </div>
+  {% else %}
+  {% if cart.item_count > 0 %}
+    <p class="cart-page__intro">{{ 'cart.general.intro' | t }}</p>
+    <form action="{{ routes.cart_url }}" method="post">
+      <table class="cart-table">
+        <thead>
+          <tr>
+            <th scope="col">{{ 'cart.general.product' | t }}</th>
+            <th scope="col">{{ 'cart.general.price' | t }}</th>
+            <th scope="col">{{ 'cart.general.quantity' | t }}</th>
+            <th scope="col">{{ 'cart.general.total' | t }}</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in cart.items %}
+            <tr class="cart-item">
+              <td>
+                <a href="{{ item.url }}" style="display: flex; align-items: center; gap: var(--space-s); text-decoration: none; color: inherit;">
+                  {% if item.image %}
+                    <img class="cart-item__image" src="{{ item.image | image_url: width: 128 }}" alt="{{ item.title | escape }}" width="64" height="64">
+                  {% endif %}
+                  <span>{{ item.product.title }}{% if item.variant.title != 'Default Title' %} – {{ item.variant.title }}{% endif %}</span>
+                </a>
+              </td>
+              <td>{{ item.final_price | money }}</td>
+              <td>
+                <input
+                  type="number"
+                  name="updates[]"
+                  value="{{ item.quantity }}"
+                  min="0"
+                  max="999"
+                  aria-label="{{ 'cart.general.quantity' | t }}"
+                  style="width: 64px; padding: 8px; border: 1px solid var(--color-border); border-radius: 4px;"
+                >
+              </td>
+              <td>{{ item.final_line_price | money }}</td>
+              <td>
+                <a href="{{ item.url_to_remove }}" class="cart-item__remove">{{ 'cart.general.remove' | t }}</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="cart-footer">
+        <p class="cart-footer__total">{{ 'cart.general.subtotal' | t }}: <strong>{{ cart.total_price | money }}</strong></p>
+        <div class="cart-footer__actions">
+          <button type="submit" name="update" class="btn btn--secondary">{{ 'cart.general.update' | t }}</button>
+          <button type="submit" name="checkout" class="btn btn--primary btn--large">{{ 'cart.general.checkout' | t }}</button>
+        </div>
+      </div>
+    </form>
+  {% else %}
+    <div class="cart-empty">
+      <p>{{ 'cart.general.empty' | t }}</p>
+      <a href="{{ routes.collections_url }}" class="btn btn--primary">{{ 'general.continue_shopping' | t }}</a>
+    </div>
+  {% endif %}
+  {% endunless %}
+</div>
+
+{% schema %}
+{
+  "name": "Cart",
+  "tag": "section",
+  "class": "section-main-cart"
+}
+{% endschema %}

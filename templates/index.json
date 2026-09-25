@@ -1,0 +1,22 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "heading": "Wholesale Catalog",
+        "subheading": "Browse products and place bulk orders. Simple pricing, fast fulfillment.",
+        "cta_text": "View catalog",
+        "cta_link": ""
+      }
+    },
+    "featured-collection": {
+      "type": "featured-collection",
+      "settings": {
+        "heading": "Featured products",
+        "products_to_show": 6,
+        "show_view_all": true
+      }
+    }
+  },
+  "order": ["hero", "featured-collection"]
+}

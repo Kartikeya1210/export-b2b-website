@@ -1,0 +1,91 @@
+<div class="list-collections-page page-width">
+  <header class="collection-list-header">
+    <h1 class="collection-list-header__title h1">{{ section.settings.title }}</h1>
+    <p class="collection-list-header__subtitle">{{ section.settings.subtitle }}</p>
+  </header>
+
+  {% assign collections_to_show = collections %}
+  {% if section.settings.sort == 'alphabetical' %}
+    {% assign collections_to_show = collections | sort: 'title' %}
+  {% elsif section.settings.sort == 'alphabetical_reversed' %}
+    {% assign collections_to_show = collections | sort: 'title' | reverse %}
+  {% elsif section.settings.sort == 'products_high' %}
+    {% assign collections_to_show = collections | sort: 'products_count' | reverse %}
+  {% elsif section.settings.sort == 'products_low' %}
+    {% assign collections_to_show = collections | sort: 'products_count' %}
+  {% endif %}
+
+  {% if collections_to_show.size > 0 %}
+    <ul class="collection-grid">
+      {% for collection in collections_to_show %}
+        <li class="collection-grid__item">
+          <a href="{{ collection.url }}" class="collection-card">
+            <div class="collection-card__media">
+              {% if collection.image %}
+                <img
+                  class="collection-card__image"
+                  src="{{ collection.image | image_url: width: 520 }}"
+                  alt="{{ collection.image.alt | default: collection.title | escape }}"
+                  width="260"
+                  height="260"
+                  loading="lazy"
+                >
+              {% elsif collection.products.first.featured_image %}
+                <img
+                  class="collection-card__image"
+                  src="{{ collection.products.first.featured_image | image_url: width: 520 }}"
+                  alt="{{ collection.title | escape }}"
+                  width="260"
+                  height="260"
+                  loading="lazy"
+                >
+              {% else %}
+                <div class="collection-card__image collection-card__image--placeholder">{{ collection.title | slice: 0 }}</div>
+              {% endif %}
+            </div>
+            <div class="collection-card__info">
+              <h2 class="collection-card__title">{{ collection.title }}</h2>
+              <span class="collection-card__count">{{ collection.products_count }} {{ 'general.products_count' | t }}</span>
+            </div>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="collection-empty">{{ 'general.no_collections' | t }}</p>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Collection list (catalog)",
+  "tag": "section",
+  "class": "section-list-collections",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Product catalog"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subheading",
+      "default": "Browse by category. Wholesale pricing on all orders."
+    },
+    {
+      "type": "select",
+      "id": "sort",
+      "label": "Sort collections",
+      "options": [
+        { "value": "alphabetical", "label": "A–Z" },
+        { "value": "alphabetical_reversed", "label": "Z–A" },
+        { "value": "products_high", "label": "Most products first" },
+        { "value": "products_low", "label": "Fewest products first" }
+      ],
+      "default": "alphabetical"
+    }
+  ]
+}
+{% endschema %}

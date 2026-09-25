@@ -1,0 +1,47 @@
+<div class="collection-page page-width">
+  <header class="collection-header">
+    <h1 class="collection-header__title h1">{{ collection.title }}</h1>
+    {% if collection.description != blank %}
+      <div class="collection-header__description">{{ collection.description }}</div>
+    {% endif %}
+  </header>
+
+  {% paginate collection.products by section.settings.products_per_page %}
+    {% if collection.products.size > 0 %}
+      <ul class="product-grid">
+        {% for product in collection.products %}
+          <li class="product-grid__item">
+            {% render 'product-card', product: product %}
+          </li>
+        {% endfor %}
+      </ul>
+
+      {% if paginate.pages > 1 %}
+        <nav class="pagination" aria-label="Pagination">
+          {{ paginate | default_pagination }}
+        </nav>
+      {% endif %}
+    {% else %}
+      <p class="collection-empty">{{ 'general.no_products' | t }}</p>
+    {% endif %}
+  {% endpaginate %}
+</div>
+
+{% schema %}
+{
+  "name": "Collection (catalog)",
+  "tag": "section",
+  "class": "section-collection-list",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "label": "Products per page",
+      "default": 24
+    }
+  ]
+}
+{% endschema %}
